@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="LatesNewsApp.bookmark" target="21" />
+      <module name="LatesNewsApp.designsystem" target="21" />
+      <module name="LatesNewsApp.foryou" target="21" />
+      <module name="LatesNewsApp.interest" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
