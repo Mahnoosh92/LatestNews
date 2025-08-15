@@ -9,19 +9,24 @@ import androidx.navigation.compose.navigation
 import kotlinx.serialization.Serializable
 
 
-@Serializable data object ForYouRoute // route to ForYou screen
+@Serializable
+data object ForYouRoute // route to ForYou screen
 
-@Serializable data object ForYouBaseRoute
+@Serializable
+data object ForYouBaseRoute
 
-fun NavController.navigateToForYou(navOptions: NavOptions) = navigate(route = ForYouRoute, navOptions)
+fun NavController.navigateToForYou(navOptions: NavOptions) =
+    navigate(route = ForYouRoute, navOptions)
 
 fun NavGraphBuilder.forYouSection(
+    newsDestination: NavGraphBuilder.() -> Unit
 ) {
     navigation<ForYouBaseRoute>(startDestination = ForYouRoute) {
         composable<ForYouRoute>(
             deepLinks = emptyList(),
         ) {
-            Text("Foryoy")
+            ForYouScreen()
         }
+        newsDestination()
     }
 }

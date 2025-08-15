@@ -57,10 +57,10 @@ fun NewsApp(
                     icon = {
                         Icon(
                             it.selectedIcon,
-                            contentDescription = stringResource(it.titleTextId)
+                            contentDescription = stringResource(it.iconTextId)
                         )
                     },
-                    label = { Text(stringResource(it.titleTextId)) },
+                    label = { Text(stringResource(it.iconTextId)) },
                     selected = selected,
                     onClick = { appState.navigateToTopLevelDestination(it) }
                 )
@@ -102,7 +102,7 @@ fun NewsApp(
                 if (destination != null) {
                     shouldShowTopAppBar = true
                     CenterAlignedTopAppBar(
-                        title = { Text(text = stringResource(id = R.string.app_name)) },
+                        title = { Text(text = stringResource(id = destination.iconTextId)) },
                         navigationIcon = {
                             IconButton(onClick = onNavigationClick) {
                                 Icon(

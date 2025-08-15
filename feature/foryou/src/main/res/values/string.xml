@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_foryou_title">For you</string>
+
+    <string name="feature_foryou_onboarding_guidance_title">What are you interested in?</string>
+    <string name="feature_foryou_onboarding_guidance_subtitle">Updates from category you follow will appear here. Follow some things to get started.</string>
+    <string name="feature_foryou_headline_clicked">Headline Clicked</string>
 </resources>
