@@ -1,11 +1,12 @@
 package com.mahnoosh.foryou.navigation
 
-import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.mahnoosh.data.model.Headline
+import com.mahnoosh.foryou.ForYouScreen
 import kotlinx.serialization.Serializable
 
 
@@ -19,13 +20,14 @@ fun NavController.navigateToForYou(navOptions: NavOptions) =
     navigate(route = ForYouRoute, navOptions)
 
 fun NavGraphBuilder.forYouSection(
-    newsDestination: NavGraphBuilder.() -> Unit
+    newsDestination: NavGraphBuilder.() -> Unit,
+    onNewsClicked: (Headline) -> Unit
 ) {
     navigation<ForYouBaseRoute>(startDestination = ForYouRoute) {
         composable<ForYouRoute>(
             deepLinks = emptyList(),
         ) {
-            ForYouScreen()
+            ForYouScreen(onNewsClicked = onNewsClicked)
         }
         newsDestination()
     }

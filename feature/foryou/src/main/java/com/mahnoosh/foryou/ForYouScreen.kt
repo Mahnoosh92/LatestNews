@@ -1,4 +1,4 @@
-package com.mahnoosh.foryou.navigation
+package com.mahnoosh.foryou
 
 import android.content.Context
 import android.net.Uri
@@ -49,7 +49,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -61,6 +60,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mahnoosh.data.model.Headline
@@ -68,13 +68,11 @@ import com.mahnoosh.designsystem.DynamicAsyncImage
 import com.mahnoosh.designsystem.NewsTextButton
 import com.mahnoosh.designsystem.ToggleButton
 import com.mahnoosh.designsystem.ui.theme.LatesNewsAppTheme
-import com.mahnoosh.foryou.R
 import com.mahnoosh.foryou.model.Category
 import com.mahnoosh.foryou.model.allCategories
-import androidx.core.net.toUri
 
 @Composable
-fun ForYouScreen(viewModel: ForYouViewModel = hiltViewModel()) {
+fun ForYouScreen(viewModel: ForYouViewModel = hiltViewModel(), onNewsClicked: (Headline) -> Unit) {
 
     var allCategoriesAsState by remember {
         mutableStateOf(allCategories)
@@ -97,7 +95,9 @@ fun ForYouScreen(viewModel: ForYouViewModel = hiltViewModel()) {
                     it.copy(isSelected = false)
             }
             viewModel.getHeadlines(categoryName = v)
-        })
+        },
+        onNewsClicked = onNewsClicked
+        )
 }
 
 @Composable
@@ -105,6 +105,7 @@ fun ForYouScreen(
     uiState: ForYouUiState,
     categories: List<Category>,
     onCategoryCheckedChanged: (String, Boolean) -> Unit,
+    onNewsClicked: (Headline) -> Unit
 ) {
     val state = rememberLazyStaggeredGridState()
     Box(
@@ -128,7 +129,7 @@ fun ForYouScreen(
             when (uiState) {
                 is ForYouUiState.Success -> {
                     items(uiState.data) {
-                        HeadlineCard(headline = it)
+                        HeadlineCard(headline = it, onNewsClicked = onNewsClicked)
                     }
                 }
 
@@ -154,7 +155,7 @@ fun ForYouScreen(
 }
 
 @Composable
-fun HeadlineCard(headline: Headline) {
+fun HeadlineCard(headline: Headline, onNewsClicked: (Headline) -> Unit) {
     val clickActionLabel = stringResource(R.string.feature_foryou_headline_clicked)
     val context = LocalContext.current
     val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
@@ -163,6 +164,7 @@ fun HeadlineCard(headline: Headline) {
             headline.url?.toUri()?.let {
                 launchCustomChromeTab(context = context, uri = it, toolbarColor = backgroundColor)
             }
+//            onNewsClicked.invoke(headline)
         },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),

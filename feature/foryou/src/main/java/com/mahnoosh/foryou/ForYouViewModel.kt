@@ -1,18 +1,12 @@
-package com.mahnoosh.foryou.navigation
+package com.mahnoosh.foryou
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mahnoosh.common.Dispatcher
 import com.mahnoosh.common.NewsDispatchers
 import com.mahnoosh.data.model.Headline
-import com.mahnoosh.data.repository.DefaultHeadlineRepository
 import com.mahnoosh.data.repository.HeadlineRepository
-import com.mahnoosh.database.data.localdatasource.HeadlineLocalDatasource
-import com.mahnoosh.foryou.model.Category
-import com.mahnoosh.network.data.remotedatasource.HeadlineRemoteDatasource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +35,7 @@ class ForYouViewModel @Inject constructor(
     fun getHeadlines(categoryName: String) {
         viewModelScope.launch(handler) {
             headlineRepository
-                .getAllHeadlines(update = true, category = categoryName)
+                .getAllHeadlines(update = false, category = categoryName)
                 .flowOn(ioDispatcher)
                 .catch {
                     _uiState.value =

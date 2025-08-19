@@ -19,6 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mahnoosh.designsystem.ui.theme.LatesNewsAppTheme
+import com.mahnoosh.search.navigation.navigateToSearch
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +56,9 @@ class MainActivity : ComponentActivity() {
             val appState = rememberNewsAppState()
             val snackbarHostState = remember { SnackbarHostState() }
             LatesNewsAppTheme(darkTheme = themeSettings.darkTheme) {
-                NewsApp(appState = appState, snackbarHostState = snackbarHostState)
+                NewsApp(appState = appState, snackbarHostState = snackbarHostState, onNavigationClick = {
+                    appState.navController.navigateToSearch(navOptions = null)
+                })
             }
         }
     }
