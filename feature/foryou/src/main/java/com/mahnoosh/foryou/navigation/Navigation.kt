@@ -20,8 +20,8 @@ fun NavController.navigateToForYou(navOptions: NavOptions) =
     navigate(route = ForYouRoute, navOptions)
 
 fun NavGraphBuilder.forYouSection(
-    newsDestination: NavGraphBuilder.() -> Unit,
-    onNewsClicked: (Headline) -> Unit
+    newsDestination: NavGraphBuilder.() -> Unit = { },
+    onNewsClicked: (Headline) -> Unit = {}
 ) {
     navigation<ForYouBaseRoute>(startDestination = ForYouRoute) {
         composable<ForYouRoute>(

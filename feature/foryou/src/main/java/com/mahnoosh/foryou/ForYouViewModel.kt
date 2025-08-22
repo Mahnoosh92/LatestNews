@@ -10,10 +10,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,30 +31,30 @@ class ForYouViewModel @Inject constructor(
     @Dispatcher(NewsDispatchers.IO) val  ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<ForYouUiState> = MutableStateFlow(ForYouUiState.Loading)
-    val uiState: StateFlow<ForYouUiState>
-        get() = _uiState.asStateFlow()
+    private val _categoryName = MutableStateFlow<String?>(null)
 
-    private val handler = CoroutineExceptionHandler { _, exception ->
-        _uiState.value = ForYouUiState.Error(message = exception.message ?: "Something went wrong")
-    }
-
-    fun getHeadlines(categoryName: String) {
-        viewModelScope.launch(handler) {
+    val uiState: StateFlow<ForYouUiState> = _categoryName
+        .filterNotNull()
+        .flatMapLatest { categoryName ->
             headlineRepository
                 .getAllHeadlines(update = false, category = categoryName)
+                .map<List<Headline>, ForYouUiState>(ForYouUiState::Success)
                 .flowOn(ioDispatcher)
-                .catch {
-                    _uiState.value =
-                        ForYouUiState.Error(message = it.message ?: "Something went wrong")
+                .catch { exception ->
+                    emit(ForYouUiState.Error(message = exception.message ?: "Something went wrong"))
                 }
-                .collect {
-                    _uiState.value = ForYouUiState.Success(it)
-                }
+                .onStart { emit(ForYouUiState.Loading) }
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ForYouUiState.Loading
+        )
+
+    fun getHeadlines(categoryName: String) {
+        _categoryName.value = categoryName
     }
 }
-
 sealed interface ForYouUiState {
     data object Loading : ForYouUiState
     data class Success(val data: List<Headline>) : ForYouUiState

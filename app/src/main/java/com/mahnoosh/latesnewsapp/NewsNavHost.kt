@@ -2,15 +2,15 @@ package com.mahnoosh.latesnewsapp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
-import com.mahnoosh.bookmark.navigation.bookmarksScreen
-import com.mahnoosh.data.model.Headline
-import com.mahnoosh.foryou.SingleNews
-import com.mahnoosh.foryou.navigateToTopic
-import com.mahnoosh.foryou.navigation.ForYouBaseRoute
-import com.mahnoosh.foryou.navigation.forYouSection
-import com.mahnoosh.interest.navigation.interestScreen
-import com.mahnoosh.search.navigation.searchSection
+import com.mahnoosh.authentication.navigation.AuthRoute
+import com.mahnoosh.authentication.navigation.authNavGraph
+import com.mahnoosh.dashboard.navigation.DashboardRoute
+import com.mahnoosh.dashboard.navigation.dashboardNavGraph
+import com.mahnoosh.detail.navigation.DetailRoute
+import com.mahnoosh.detail.navigation.detailNavGraph
+import com.mahnoosh.latesnewsapp.navigation.AppTopLevelDestination
 
 @Composable
 fun NewsNavHost(
@@ -20,18 +20,22 @@ fun NewsNavHost(
 ) {
     NavHost(
         navController = appState.navController,
-        startDestination = ForYouBaseRoute,
+        startDestination = AppTopLevelDestination.AUTH.baseRoute,
         modifier = modifier,
     ) {
-        forYouSection(
-            onNewsClicked = { headline: Headline ->
-                appState.navController.navigateToTopic(topicId = headline.id)
-            },
-            newsDestination = { SingleNews(onBackPressed = appState.navController::popBackStack) }
-        )
-        bookmarksScreen()
-        interestScreen()
-        searchSection(onBackPressed = appState.navController::popBackStack)
+        authNavGraph(onNavigateToLogin = {
+            appState.navController.navigateToDashboardGraph()
+        })
+        dashboardNavGraph()
+        detailNavGraph()
     }
 
 }
+
+// Navigation between graphs
+
+fun NavController.navigateToDashboardGraph() = navigate(DashboardRoute) {
+    popUpTo(AuthRoute) { inclusive = true }
+}
+
+fun NavController.navigateToDetailGraph() = navigate(DetailRoute)

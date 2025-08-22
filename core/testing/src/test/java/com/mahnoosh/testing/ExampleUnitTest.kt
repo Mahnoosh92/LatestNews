@@ -1,4 +1,4 @@
-package com.mahnoosh.foryou
+package com.mahnoosh.testing
 
 import org.junit.Test
 

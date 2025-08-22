@@ -8,20 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
-import com.mahnoosh.bookmark.navigation.navigateToBookmarks
-import com.mahnoosh.foryou.navigation.navigateToForYou
-import com.mahnoosh.interest.navigation.navigateToInterests
-import com.mahnoosh.latesnewsapp.navigation.TopLevelDestination
+import com.mahnoosh.latesnewsapp.navigation.AppTopLevelDestination
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 @Composable
 fun rememberNewsAppState(
@@ -52,38 +42,10 @@ class NewsAppState(
             } ?: previousDestination.value
         }
 
-    val currentTopLevelDestination: TopLevelDestination?
+    val currentTopLevelDestination: AppTopLevelDestination?
         @Composable get() {
-            return TopLevelDestination.entries.firstOrNull { topLevelDestination ->
-                currentDestination?.hasRoute(route = topLevelDestination.route) == true
+            return AppTopLevelDestination.entries.firstOrNull { topLevelDestination ->
+                currentDestination?.hasRoute(route = topLevelDestination.baseRoute) == true
             }
         }
-
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
-        val topLevelNavOptions = navOptions {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            // Avoid multiple copies of the same destination when
-            // reselecting the same item
-            launchSingleTop = true
-            // Restore state when reselecting a previously selected item
-            restoreState = true
-        }
-
-        when (topLevelDestination) {
-            TopLevelDestination.FOR_YOU -> navController.navigateToForYou(topLevelNavOptions)
-            TopLevelDestination.BOOKMARKS -> navController.navigateToBookmarks(topLevelNavOptions)
-            TopLevelDestination.INTERESTS -> navController.navigateToInterests(
-                null,
-                topLevelNavOptions
-            )
-        }
-    }
-
-    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
-
 }

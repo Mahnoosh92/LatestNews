@@ -56,9 +56,7 @@ class MainActivity : ComponentActivity() {
             val appState = rememberNewsAppState()
             val snackbarHostState = remember { SnackbarHostState() }
             LatesNewsAppTheme(darkTheme = themeSettings.darkTheme) {
-                NewsApp(appState = appState, snackbarHostState = snackbarHostState, onNavigationClick = {
-                    appState.navController.navigateToSearch(navOptions = null)
-                })
+                NewsApp(appState = appState, snackbarHostState = snackbarHostState)
             }
         }
     }

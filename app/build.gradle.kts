@@ -60,7 +60,6 @@ dependencies {
     implementation(libs.androidx.compose.material3.adaptive.layout)
     implementation(libs.androidx.compose.material3.adaptive.navigation)
     implementation(libs.androidx.compose.material3.windowSizeClass)
-    implementation(libs.androidx.compose.material3.navigationSuite)
 
     // Other modules
     implementation(projects.core.designsystem)
@@ -69,6 +68,9 @@ dependencies {
     implementation(projects.feature.interest)
     implementation(projects.feature.bookmark)
     implementation(projects.feature.search)
+    implementation(projects.authentication)
+    implementation(projects.feature.dashboard)
+    implementation(projects.detail)
 
     testImplementation(libs.junit)
 
