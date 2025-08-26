@@ -25,6 +25,9 @@ turbine = "1.2.0"
 mockk = "1.13.11"
 androidxLifecycle = "2.7.0"
 androidxBrowser = "1.8.0"
+datastore="1.1.7"
+composeFoundation = "1.4.3"
+composeAccompanistIndicator="0.30.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +74,10 @@ androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "life
 androidx-lifecycle-runtimeTesting = { group = "androidx.lifecycle", name = "lifecycle-runtime-testing", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidxBrowser" }
+preference-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+preference-datastore-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
+compose-foundation = {  module = "androidx.compose.foundation:foundation", version.ref = "composeFoundation" }
+compose-accompanist-pager = {  group = "com.google.accompanist", name="accompanist-pager-indicators", version.ref = "composeAccompanistIndicator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

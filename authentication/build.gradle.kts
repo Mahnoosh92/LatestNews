@@ -59,14 +59,19 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.browser)
     implementation(libs.dagger.hilt)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.accompanist.pager)
     ksp(libs.dagger.hilt.compiler)
 
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.core.common)
+    implementation(projects.core.datastore)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.preference.datastore.core)
+    testImplementation(libs.mockk)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

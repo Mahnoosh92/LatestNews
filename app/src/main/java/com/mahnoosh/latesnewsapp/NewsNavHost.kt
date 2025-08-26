@@ -6,6 +6,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import com.mahnoosh.authentication.navigation.AuthRoute
 import com.mahnoosh.authentication.navigation.authNavGraph
+import com.mahnoosh.authentication.navigation.navigateToLogin
+import com.mahnoosh.authentication.navigation.navigateToOnBoarding
 import com.mahnoosh.dashboard.navigation.DashboardRoute
 import com.mahnoosh.dashboard.navigation.dashboardNavGraph
 import com.mahnoosh.detail.navigation.DetailRoute
@@ -24,7 +26,11 @@ fun NewsNavHost(
         modifier = modifier,
     ) {
         authNavGraph(onNavigateToLogin = {
-            appState.navController.navigateToDashboardGraph()
+            appState.navController.navigateToLogin()
+        }, onNavigateToOnBoarding = {
+            appState.navController.navigateToOnBoarding()
+        }, onBoardingCompleted = {
+            appState.navController.navigateToLogin()
         })
         dashboardNavGraph()
         detailNavGraph()
