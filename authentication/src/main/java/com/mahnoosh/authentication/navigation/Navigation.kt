@@ -23,14 +23,15 @@ fun NavController.navigateToOnBoarding() = navigate(route = OnBoardingRoute)
 fun NavGraphBuilder.authNavGraph(
     onNavigateToLogin: () -> Unit,
     onNavigateToOnBoarding: () -> Unit,
-    onBoardingCompleted: () -> Unit
+    onBoardingCompleted: () -> Unit,
+    onSuccess: () -> Unit
 ) {
     navigation<AuthRoute>(startDestination = SplashRoute) {
         splashSection(
             onNavigateToLogin = onNavigateToLogin,
             onNavigateToOnBoarding = onNavigateToOnBoarding
         )
-        loginSection()
+        loginSection(onSuccess = onSuccess)
         registerSection()
         onBoardingSection(onBoardingCompleted = onBoardingCompleted)
     }

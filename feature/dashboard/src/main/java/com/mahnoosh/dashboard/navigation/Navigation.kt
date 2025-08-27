@@ -1,7 +1,9 @@
 package com.mahnoosh.dashboard.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
@@ -9,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -16,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.mahnoosh.bookmark.navigation.bookmarksScreen
 import com.mahnoosh.dashboard.rememberDashboardState
+import com.mahnoosh.data.model.Headline
 import com.mahnoosh.foryou.navigation.ForYouBaseRoute
 import com.mahnoosh.foryou.navigation.ForYouRoute
 import com.mahnoosh.foryou.navigation.forYouSection
@@ -28,19 +32,20 @@ data object DashboardRoute
 @Serializable
 data object DashboardScreen
 
-fun NavGraphBuilder.dashboardNavGraph() {
+fun NavGraphBuilder.dashboardNavGraph(onNewsClicked: (Headline)->Unit) {
     navigation<DashboardRoute>(startDestination = DashboardScreen) {
         composable<DashboardScreen>() {
-            DashboardScreen()
+            DashboardScreen(onNewsClicked = onNewsClicked)
         }
     }
 }
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(onNewsClicked: (Headline)->Unit ){
     val dasboardState = rememberDashboardState()
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         bottomBar = {
             BottomNavigationBar(
                 currentDestination = dasboardState.currentTopLevelDestination,
@@ -54,7 +59,7 @@ fun DashboardScreen() {
             startDestination = ForYouBaseRoute,
             modifier = Modifier.padding(padding)
         ) {
-            forYouSection { }
+            forYouSection(onNewsClicked = onNewsClicked)
             bookmarksScreen()
             interestScreen()
         }

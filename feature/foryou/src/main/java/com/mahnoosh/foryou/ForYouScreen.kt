@@ -2,16 +2,19 @@ package com.mahnoosh.foryou
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Space
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -31,13 +34,16 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -67,12 +74,16 @@ import com.mahnoosh.data.model.Headline
 import com.mahnoosh.designsystem.DynamicAsyncImage
 import com.mahnoosh.designsystem.NewsTextButton
 import com.mahnoosh.designsystem.ToggleButton
+import com.mahnoosh.designsystem.topBorder
 import com.mahnoosh.designsystem.ui.theme.LatesNewsAppTheme
 import com.mahnoosh.foryou.model.Category
 import com.mahnoosh.foryou.model.allCategories
 
 @Composable
-fun ForYouScreen(viewModel: ForYouViewModel = hiltViewModel(), onNewsClicked: (Headline) -> Unit) {
+fun ForYouScreen(
+    viewModel: ForYouViewModel = hiltViewModel(),
+    onNewsClicked: (Headline) -> Unit
+) {
 
     var allCategoriesAsState by remember {
         mutableStateOf(allCategories)
@@ -97,7 +108,7 @@ fun ForYouScreen(viewModel: ForYouViewModel = hiltViewModel(), onNewsClicked: (H
             viewModel.getHeadlines(categoryName = v)
         },
         onNewsClicked = onNewsClicked
-        )
+    )
 }
 
 @Composable
@@ -105,13 +116,12 @@ fun ForYouScreen(
     uiState: ForYouUiState,
     categories: List<Category>,
     onCategoryCheckedChanged: (String, Boolean) -> Unit,
-    onNewsClicked: (Headline) -> Unit
+    onNewsClicked: (Headline) -> Unit,
 ) {
     val state = rememberLazyStaggeredGridState()
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.tertiaryContainer),
+            .fillMaxSize(),
     ) {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(300.dp),
@@ -128,8 +138,11 @@ fun ForYouScreen(
             )
             when (uiState) {
                 is ForYouUiState.Success -> {
-                    items(uiState.data) {
-                        HeadlineCard(headline = it, onNewsClicked = onNewsClicked)
+                    items(uiState.data, key = { it.id }) {
+                        HeadlineCard(
+                            headline = it,
+                            onNewsClicked = onNewsClicked
+                        )
                     }
                 }
 
@@ -155,18 +168,23 @@ fun ForYouScreen(
 }
 
 @Composable
-fun HeadlineCard(headline: Headline, onNewsClicked: (Headline) -> Unit) {
+fun HeadlineCard(
+    headline: Headline,
+    onNewsClicked: (Headline) -> Unit
+) {
     val clickActionLabel = stringResource(R.string.feature_foryou_headline_clicked)
     val context = LocalContext.current
     val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
     Card(
         onClick = {
-            headline.url?.toUri()?.let {
-                launchCustomChromeTab(context = context, uri = it, toolbarColor = backgroundColor)
-            }
-//            onNewsClicked.invoke(headline)
+            onNewsClicked.invoke(headline)
         },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp,
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp
+        ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .semantics {
@@ -203,6 +221,19 @@ fun HeadlineCard(headline: Headline, onNewsClicked: (Headline) -> Unit) {
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2
             )
+            Row(
+                modifier = Modifier.topBorder(strokeWidth = 2.dp, color = Color.LightGray).padding(vertical = 12.dp, horizontal = 4.dp)
+            ) {
+                IconButton(onClick = {}) {
+                    Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = {
+                    launchCustomChromeTab(context = context, uri = headline.url?.toUri()!!, toolbarColor = backgroundColor)
+                }) {
+                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                }
+            }
         }
     }
 }
@@ -357,6 +388,14 @@ fun TopicIcon(
 fun PreviewSingleCategory() {
     LatesNewsAppTheme {
         SingleCategory(categoryName = "General", isSelected = true, onClick = { s, b -> })
+    }
+}
+
+@Preview
+@Composable
+fun previewHeadlineCard() {
+    LatesNewsAppTheme {
+        HeadlineCard(headline = Headline.DEFAULT, onNewsClicked = {})
     }
 }
 

@@ -31,8 +31,10 @@ fun NewsNavHost(
             appState.navController.navigateToOnBoarding()
         }, onBoardingCompleted = {
             appState.navController.navigateToLogin()
+        }, onSuccess = {
+            appState.navController.navigateToDashboardGraph()
         })
-        dashboardNavGraph()
+        dashboardNavGraph(onNewsClicked = {appState.navController.navigateToDetailGraph()})
         detailNavGraph()
     }
 
