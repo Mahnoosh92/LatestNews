@@ -1,5 +1,6 @@
 package com.mahnoosh.designsystem
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +27,9 @@ fun DynamicAsyncImage(
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize(),
             placeholder = placeholder,
+            onError = { error ->
+                Log.e("AsyncImage", "Image load failed: ${error.result.throwable?.message}")
+            }
         )
     }
 }

@@ -34,8 +34,8 @@ fun NewsNavHost(
         }, onSuccess = {
             appState.navController.navigateToDashboardGraph()
         })
-        dashboardNavGraph(onNewsClicked = {appState.navController.navigateToDetailGraph()})
-        detailNavGraph()
+        dashboardNavGraph(onNewsClicked = { appState.navController.navigateToDetailGraph(it.id) })
+        detailNavGraph(onBackPressed = { appState.navController.navigateUp() })
     }
 
 }
@@ -46,4 +46,5 @@ fun NavController.navigateToDashboardGraph() = navigate(DashboardRoute) {
     popUpTo(AuthRoute) { inclusive = true }
 }
 
-fun NavController.navigateToDetailGraph() = navigate(DetailRoute)
+fun NavController.navigateToDetailGraph(headlineId: String) =
+    navigate(DetailRoute(headlineId = headlineId))

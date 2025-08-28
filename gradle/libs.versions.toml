@@ -78,6 +78,8 @@ preference-datastore = { group = "androidx.datastore", name = "datastore-prefere
 preference-datastore-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
 compose-foundation = {  module = "androidx.compose.foundation:foundation", version.ref = "composeFoundation" }
 compose-accompanist-pager = {  group = "com.google.accompanist", name="accompanist-pager-indicators", version.ref = "composeAccompanistIndicator" }
+androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4", version="1.6.0" }
+androidx-compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

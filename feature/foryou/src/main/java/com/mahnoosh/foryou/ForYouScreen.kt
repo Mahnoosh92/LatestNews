@@ -2,13 +2,10 @@ package com.mahnoosh.foryou
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Space
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,6 +58,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -152,7 +150,11 @@ fun ForYouScreen(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .semantics { contentDescription = "Loader" },
+                            )
                         }
                     }
                 }
@@ -222,14 +224,20 @@ fun HeadlineCard(
                 maxLines = 2
             )
             Row(
-                modifier = Modifier.topBorder(strokeWidth = 2.dp, color = Color.LightGray).padding(vertical = 12.dp, horizontal = 4.dp)
+                modifier = Modifier
+                    .topBorder(strokeWidth = 2.dp, color = Color.LightGray)
+                    .padding(vertical = 12.dp, horizontal = 4.dp)
             ) {
                 IconButton(onClick = {}) {
                     Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = {
-                    launchCustomChromeTab(context = context, uri = headline.url?.toUri()!!, toolbarColor = backgroundColor)
+                    launchCustomChromeTab(
+                        context = context,
+                        uri = headline.url?.toUri()!!,
+                        toolbarColor = backgroundColor
+                    )
                 }) {
                     Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
                 }
@@ -361,7 +369,8 @@ fun SingleCategory(
                 },
                 checkedIcon = {
                     Icon(imageVector = Icons.Filled.Check, contentDescription = null)
-                }
+                },
+                modifier = Modifier.semantics { contentDescription = "SingleCategory${categoryName}" }
             )
         }
     }

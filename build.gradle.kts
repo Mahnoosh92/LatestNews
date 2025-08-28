@@ -8,3 +8,16 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.room) apply false
 }
+
+subprojects {
+    configurations.all {
+        resolutionStrategy {
+            eachDependency {
+                if (requested.group == "com.intellij" && requested.name == "annotations") {
+                    // Force the version from org.jetbrains
+                    useTarget("org.jetbrains:annotations:23.0.0")
+                }
+            }
+        }
+    }
+}
